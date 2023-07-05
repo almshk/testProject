@@ -1,5 +1,8 @@
 require('dotenv').config()
-var standardZPO = require( '../data/standardZPO.json');
+var standardZPO = require( "../data/standardZPO.json");
+var listReport = require( '../module/listReport.js');
+var objectPage = require ("../module/objectPage.js");
+var elementsData = require ("../data/elementsData.json");
 
 describe("Create new Purchase Order", function() {
     
@@ -20,89 +23,76 @@ describe("Create new Purchase Order", function() {
                 "id": "*addEntry"
             }
         };
-
         await ui5.userInteraction.click(selector);
-        await util.browser.sleep (30000);
+        await util.browser.sleep (15000);
     });
 
-    it ('Step 04: Select Purchase Order Type - Standart Z-PO (ZNB)', async function(){
-       const selector = {
-            "elementProperties": {
-                 "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                 "metadata": "sap.m.ComboBox",
-                 "id": "*GeneralInformationFacet1::PurchaseOrderType::Field-comboBoxEdit"
-    }
-};
-
-        actualValue = "Standard Z-PO (ZNB)"
-        await ui5.userInteraction.selectComboBox(selector, actualValue);
-    });
+    it ('Step 04: Select Purchase Order Type - Standard Z-PO (ZNB)', async function(){
+//       
+           await objectPage.fillInFields(elementsData.comboBox.purchaseOrderType.type,
+                 elementsData.comboBox.purchaseOrderType.metadata,
+                 elementsData.comboBox.purchaseOrderType.id,
+                 standardZPO.generalInformation.purchaseOrderType
+            );
+        });
 
     it ('Step 05: Choose Suplier - 50000040',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Input",
-                "id": "*GeneralInformationFacet1::Supplier::Field-input"
-            }
-        };
-
-        const valueToEnter = "50000040";
-        await ui5.userInteraction.clearAndFill(selector, valueToEnter);
+        // const selector = {
+        //     "elementProperties": {
+        //         "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
+        //         "metadata": "sap.m.Input",
+        //         "id": "*GeneralInformationFacet1::Supplier::Field-input"
+        //     }
+        // };
+        await objectPage.fillInFields(elementsData.field.supplier.type,
+            elementsData.field.supplier.metadata,
+            elementsData.field.supplier.id,
+            standardZPO.generalInformation.supplier
+            );
+        // const valueToEnter = "50000040";
+        // await ui5.userInteraction.clearAndFill(selector, standardZPO.generalInformation.supplier);
     });
 
     it ('Step 06: Choose Currency - EUR',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Input",
-                "id": "*GeneralInformationFacet1::DocumentCurrency::Field-input"
-            }
-        };
-
-        const valueToEnter = "EUR";
-        await ui5.userInteraction.clearAndFill(selector, valueToEnter);
+        
+        await objectPage.fillInFields(elementsData.field.currency.type,
+            elementsData.field.currency.metadata,
+            elementsData.field.currency.id,
+            standardZPO.generalInformation.currency
+        );
+        
     });
 
     it ('Step 07: Choose Pucrchasing Group - 001',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Input",
-                "id": "*GeneralInformationFacet2::PurchasingGroup::Field-input"
-            }
-        };
-
-        const valueToEnter = "001";
-        await ui5.userInteraction.clearAndFill(selector, valueToEnter);
+        
+        await objectPage.fillInFields(elementsData.field.purchasingGroup.type,
+            elementsData.field.purchasingGroup.metadata,
+            elementsData.field.purchasingGroup.id,
+            standardZPO.generalInformation.purchasingGroup
+        );
+        
         await common.userInteraction.pressEnter();
     });
 
     it ('Step 08: Choose Purchasing Organization - 1010',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Input",
-                "id": "*GeneralInformationFacet2::PurchasingOrganization::Field-input"
-            }
-        };
-
-        const valueToEnter = "1010";
-        await ui5.userInteraction.clearAndFill(selector, valueToEnter);
+        
+        await objectPage.fillInFields(elementsData.field.purchasingOrganization.type,
+            elementsData.field.purchasingOrganization.metadata,
+            elementsData.field.purchasingOrganization.id,
+            standardZPO.generalInformation.purchasingOrganization
+        );
+        
         await common.userInteraction.pressEnter();
     });
 
     it ('Step 09: Choose Company Code - 1010',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Input",
-                "id": "*GeneralInformationFacet2::CompanyCode::Field-input"
-            }
-        };
-
-        const valueToEnter = "1010";
-        await ui5.userInteraction.clearAndFill(selector, valueToEnter);
+       
+        await objectPage.fillInFields(elementsData.field.companyCode.type,
+            elementsData.field.companyCode.metadata,
+            elementsData.field.companyCode.id,
+            standardZPO.generalInformation.companyCode
+        );
+       
         await common.userInteraction.pressEnter();
     });
 
@@ -118,66 +108,122 @@ describe("Create new Purchase Order", function() {
         await ui5.userInteraction.click(selector);
     });
 
-    it ('Step 11: Add Purchase Order Item',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Button",
-                "id": "*ItemsFacet::addEntry"
-            }
-        };
+    var itemArr = standardZPO.items;
+    for (let [itemIndex, itemValue] of itemArr.entries()) {
 
-        await ui5.userInteraction.click(selector);
-    });
+        it ("Item " + itemValue.item + " Add Purchase Order Item",  async function(){
+            
+            const selector = {
+                "elementProperties": {
+                    "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
+                    "metadata": "sap.m.Button",
+                    "id": "*ItemsFacet::addEntry"
+                }
+            };
+            await ui5.userInteraction.click(selector);
 
-    it ('Step 12: Fill in Item Category',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.ComboBox",
-                "bindingContextPath": "/C_PurchaseOrderItemTP*PurchaseOrder=''*PurchaseOrderItem='00010'*"
-            }
-        };
+        });
 
-        actualValue = "Standard"
-        await ui5.userInteraction.selectComboBox(selector, actualValue);
-    });
+        it ("Item " + itemValue.item + " Select Item Category - " + itemValue.itemCategory,  async function(){
 
-    it ('Step 13: Choose Material - WM-D03',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Input",
-                "bindingContextPath": "/C_PurchaseOrderItemTP*PurchaseOrder=''*PurchaseOrderItem='00010'*",
-                "value": [{
-                    "path": "ManufacturerMaterial"
-                }]
-            }
-        };
+            await objectPage.fillInFields(elementsData.field.itemCategory.type,
+                elementsData.field.itemCategory.metadata,
+                elementsData.field.itemCategory.path, 
+                itemValue.itemCategory,
+                itemValue.item
+            );
 
-        const valueToEnter = "WM-D03";
-        await ui5.userInteraction.clearAndFill(selector, valueToEnter);
+        });
+    
+        it ("Item " + itemValue.item + " Choose Material - " + itemValue.Material,  async function(){
 
-    });
+            await objectPage.fillInFields(elementsData.field.itemMaterial.type,
+                elementsData.field.itemMaterial.metadata,
+                elementsData.field.itemMaterial.path, 
+                itemValue.material,
+                itemValue.item
+            );
 
-    it ('Step 14: Fill in Quantity',  async function(){
-        const selector = {
-            "elementProperties": {
-                "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
-                "metadata": "sap.m.Input",
-                "bindingContextPath": "/C_PurchaseOrderItemTP*PurchaseOrder=''*PurchaseOrderItem='00010'*",
-                "value": [{
-                    "path": "OrderQuantity"
-                }],
-                "ariaLabelledBy": ["*ItemsFacet::Table-OrderQuantity-header"]
-            }
-        };
+        });
+    
+        it ("Item " + itemValue.item + " Fill in Quantity " + itemValue.orderQuantity,  async function(){
+
+            await objectPage.fillInFields(elementsData.field.itemQuantity.type,
+                elementsData.field.itemQuantity.metadata,
+                elementsData.field.itemQuantity.path, 
+                itemValue.quantity,
+                itemValue.item
+            );
+
+        });
+    };
+
+    // it ('Step 11: Add Purchase Order Item',  async function(){
+    //     const selector = {
+    //         "elementProperties": {
+    //             "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
+    //             "metadata": "sap.m.Button",
+    //             "id": "*ItemsFacet::addEntry"
+    //         }
+    //     };
+
+    //     await ui5.userInteraction.click(selector);
+    // });
+
+    
+    // it ('Step 12: Fill in Item Category',  async function(){
+    //     // const selector = {
+    //     //     "elementProperties": {
+    //     //         "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
+    //     //         "metadata": "sap.m.ComboBox",
+    //     //         "bindingContextPath": "/C_PurchaseOrderItemTP*PurchaseOrder=''*PurchaseOrderItem='00010'*"
+    //     //     }
+    //     // };
+    //     await objectPage.fillInFields(elementsData.field.itemCategory.type, 
+    //         elementsData.field.itemCategory.metadata, 
+    //         elementsData.field.itemCategory.path, 
+    //         standardZPO.items[0010].itemCategory);
+
+    //     //actualValue = "Standard"
+    //     await ui5.userInteraction.selectComboBox(selector, standardZPO.items[00010].itemCategory);
+    // });
+
+    // it ('Step 13: Choose Material - WM-D03',  async function(){
+    //     const selector = {
+    //         "elementProperties": {
+    //             "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
+    //             "metadata": "sap.m.Input",
+    //             "bindingContextPath": "/C_PurchaseOrderItemTP*PurchaseOrder=''*PurchaseOrderItem='00010'*",
+    //             "value": [{
+    //                 "path": "ManufacturerMaterial"
+    //             }]
+    //         }
+    //     };
+
+    //     //const valueToEnter = "WM-D03";
+    //     await ui5.userInteraction.clearAndFill(selector, standardZPO.items[00010].material);
+
+    // });
+
+    // it ('Step 14: Fill in Quantity',  async function(){
+    //     const selector = {
+    //         "elementProperties": {
+    //             "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
+    //             "metadata": "sap.m.Input",
+    //             "bindingContextPath": "/C_PurchaseOrderItemTP*PurchaseOrder=''*PurchaseOrderItem='00010'*",
+    //             "value": [{
+    //                 "path": "OrderQuantity"
+    //             }],
+    //             "ariaLabelledBy": ["*ItemsFacet::Table-OrderQuantity-header"]
+    //         }
+    //     };
            
-        const valueToEnter = "10";
-        await ui5.userInteraction.clearAndFill(selector, valueToEnter);
-    });
+    //     //const valueToEnter = "10";
+    //     await ui5.userInteraction.clearAndFill(selector, standardZPO.items[00010].quantity);
+    // });
 
-    it ('Step 15: Click Create Button',  async function(){
+
+        it ('Step 15: Click Create Button',  async function(){
         const selector = {
             "elementProperties": {
                 "viewName": "sap.suite.ui.generic.template.ObjectPage.view.Details",
@@ -201,12 +247,12 @@ describe("Create new Purchase Order", function() {
         };
 
         const purchaseOrderID = await ui5.element.getPropertyValue(selector, "text");
-        /*util.console.log(purchaseOrderID);
+        console.log(purchaseOrderID);
         const userData = {
-            "purchaseOrder": purchaseOrderID
+            "purchaseOrderNumber": purchaseOrderID
         };
 
-        browser.config.purchaseOrderNumber = userData;*/
+        browser.config.params.export.purchaseOrderNumber = userData;
 
         const references = browser.config.params.import.data ["references"];
         references.purchaseOrderNumber = purchaseOrderID;
@@ -218,15 +264,6 @@ describe("Create new Purchase Order", function() {
          await ui5.session.logout();
     });
 
-
-
-           /* "ancestorProperties": { ... },
-            "parentProperties": { ... },
-            "siblingProperties": { ... },
-            "prevSiblingProperties": { ... },
-            "nextSiblingProperties": { ... },
-            "childProperties": { ... },
-            "descendantProperties": { ... }*/
-            
+        
        
     })

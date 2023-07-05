@@ -7,19 +7,69 @@
     "field": {
         "supplier": {
             "type": "ID",
-            "metaData": "sap.m.Input",
+            "metadata": "sap.m.Input",
             "id": "Supplier"
                 },
         "currency": {
             "type": "ID",
-            "metaData": "sap.m.Input",
+            "metadata": "sap.m.Input",
             "id": "DocumentCurrency"
         },
-        "purchsdingGroup": {
+        "purchasingGroup": {
             "type": "ID",
-            "metaData": "sap.m.Input",
-            "id": "purchasingGroup"
+            "metadata": "sap.m.Input",
+            "id": "PurchasingGroup"
+
+        },
+        "purchasingOrganization": {
+            "type": "ID",
+            "metadata": "sap.m.Input",
+            "id": "PurchasingOrganization"
+
+        },
+        "companyCode": {
+            "type": "ID",
+            "metadata": "sap.m.Input",
+            "id": "CompanyCode"
+
+        },
+        "itemCategory": {
+            "type": "Item",
+            "metadata": "sap.m.ComboBox",
+            "path": ""
+        },
+        "itemMaterial": {
+            "type": "Item",
+            "metadata": "sap.m.Input",
+            "path": "ManufacturerMaterial"
+
+        },
+        "itemQuantity": {
+            "type": "Item",
+            "metadata": "sap.m.Input",
+            "path": "OrderQuantity"
 
         }
-    }
+    },
+        "comboBox": {
+            "purchaseOrderType": {
+                "type": "Combobox",
+                "metadata": "sap.m.ComboBox",
+                "id": "PurchaseOrderType"    
+            }
+        },
+        "button": {
+            "createFromLR":{
+                "metadata": "sap.m.Button",
+                "id": "addEntry"
+            },
+            "createNewItem":{
+                "metadata": "sap.m.Button",
+                "id": "ItemsFacet::addEntry"
+            },
+            "createFromOP":{
+                "metadata": "sap.m.Button",
+                "id": "activate"
+            }
+        }
 }
