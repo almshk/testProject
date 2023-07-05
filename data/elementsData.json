@@ -1,0 +1,25 @@
+{
+    "section": {
+        "generalInformation": "General Information",
+        "items": "ItemsFacet",
+        "limitItems": "Limit Items"
+    },
+    "field": {
+        "supplier": {
+            "type": "ID",
+            "metaData": "sap.m.Input",
+            "id": "Supplier"
+                },
+        "currency": {
+            "type": "ID",
+            "metaData": "sap.m.Input",
+            "id": "DocumentCurrency"
+        },
+        "purchsdingGroup": {
+            "type": "ID",
+            "metaData": "sap.m.Input",
+            "id": "purchasingGroup"
+
+        }
+    }
+}
